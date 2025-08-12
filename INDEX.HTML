@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Monitoria de Atendimento Wick</title>
+<style>
+  body {
+    margin: 0; padding: 0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(90deg, #6a0dad, #ff7b00);
+    color: #333;
+  }
+  header {
+    background: rgba(255 255 255 / 0.85);
+    color: #6a0dad;
+    font-weight: bold;
+    font-size: 24px;
+    text-align: center;
+    padding: 15px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    box-shadow: 0 0 8px rgba(0,0,0,0.15);
+  }
+  .container {
+    max-width: 900px;
+    background: white;
+    margin: 30px auto 50px auto;
+    border-radius: 10px;
+    padding: 25px 30px;
+    box-shadow: 0 4px 20px rgb(0 0 0 / 0.1);
+  }
+  label {
+    font-weight: 700;
+    color: #6a0dad;
+    display: block;
+    margin-top: 18px;
+  }
+  input[type=text], input[type=date], select, textarea {
+    width: 100%;
+    padding: 9px 12px;
+    margin-top: 6px;
+    font-size: 15px;
+    border-radius: 6px;
+    border: 1.5px solid #ccc;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease;
+  }
+  input[type=text]:focus, input[type=date]:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: #6a0dad;
+    box-shadow: 0 0 8px rgba(106,13,173,0.3);
+  }
+  textarea {
+    resize: vertical;
+    min-height: 60px;
+  }
+  button {
+    background-color: #ff7b00;
+    color: white;
+    font-weight: 700;
+    font-size: 16px;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 7px;
+    margin-top: 25px;
+    cursor: pointer;
+    transition: background-color 0.25s ease;
+  }
+  button:hover {
+    background-color: #e56b00;
+  }
+</style>
+</head>
+<body>
+
+<header>Monitoria de Atendimento Wick</header>
+
+<div class="container">
+  <form id="monitoriaForm" onsubmit="return false;">
+    <label for="avaliador">Nome do Avaliador:</label>
+    <input type="text" id="avaliador" name="avaliador" required>
+
+    <label for="avaliado">Nome do Avaliado:</label>
+    <input type="text" id="avaliado" name="avaliado" required>
+
+    <label for="cliente">Cliente do Atendimento:</label>
+    <input type="text" id="cliente" name="cliente" required>
+
+    <label for="protocolo">Protocolo do Atendimento:</label>
+    <input type="text" id="protocolo" name="protocolo">
+
+    <label for="data">Data:</label>
+    <input type="date" id="data" name="data" required>
+
+    <label for="q1">1. Tempo total do atendimento:</label>
+    <textarea id="q1" name="q1" placeholder="Descreva o tempo total do atendimento"></textarea>
+
+    <label for="q2">2. Houve pausas excessivas sem justificativa?</label>
+    <select id="q2" name="q2" required>
+      <option value="">Selecione</option>
+      <option value="1">Sim</option>
+      <option value="0">Não</option>
+    </select>
+
+    <label for="q3">3. Se despediu de forma formal e cordial?</label>
+    <select id="q3" name="q3" required>
+      <option value="">Selecione</option>
+      <option value="1">Sim</option>
+      <option value="0">Não</option>
+    </select>
+
+    <label for="q4">4. Operadora:</label>
+    <select id="q4" name="q4" required>
+      <option value="">Selecione</option>
+      <option value="Claro">Claro</option>
+      <option value="Vivo">Vivo</option>
+      <option value="Tim">Tim</option>
+    </select>
+
+    <label for="q5">5. Tipo de solicitação (cancelamento, fatura, portabilidade, etc.):</label>
+    <textarea id="q5" name="q5" placeholder="Descreva o tipo de solicitação" required></textarea>
+
+    <label for="q6">6. Identificação do cliente confirmada?</label>
+    <select id="q6" name="q6" required>
+      <option value="">Selecione</option>
+      <option value="1">Sim</option>
+      <option value="0">Não</option>
+    </select>
+
+    <label for="q7">7. Uso do nome do cliente durante a conversa?</label>
+    <select id="q7" name="q7" required>
+      <option value="">Selecione</option>
+      <option value="1">Sim</option>
+      <option value="0">Não</option>
+    </select>
+
+    <label for="q8">8. Tom educado e profissional no texto?</label>
+    <select id="q8" name="q8" required>
+      <option value="">Selecione</option>
+      <option value="1">Sim</option>
+      <option value="0">Não</option>
+    </select>
+
+    <label for="q9">9. Tempo para responder a primeira mensagem dentro do SLA?</label>
+    <select id="q9" name="q9" required>
+      <option value="">Selecione</option>
+      <option value="1">Sim</option>
+      <option value="0">Não</option>
+    </select>
+
+    <label for="q10">10. Linguagem clara, sem termos técnicos desnecessários?</label>
+    <select id="q10" name="q10" required>
+      <option value="">Selecione</option>
+      <option value="1">Sim</option>
+      <option value="0">Não</option>
+    </select>
+
+    <label for="q11">11. Mensagens objetivas, sem textos longos que confundam?</label>
+    <select id="q11" name="q11" required>
+      <option value="">Selecione</option>
+      <option value="1">Sim</option>
+      <option value="0">Não</option>
+    </select>
+
+    <label for="q12">12. Escrita correta (gramática e ortografia)?</label>
+    <select id="q12" name="q12" required>
+      <option value="">Selecione</option>
+      <option value="1">Sim</option>
+      <option value="0">Não</option>
+    </select>
+
+    <label for="q13">13. Uso adequado de emojis e formatação?</label>
+    <select id="q13" name="q13" required>
+      <option value="">Selecione</option>
+      <option value="1">Sim</option>
+      <option value="0">Não</option>
+    </select>
+
+    <label for="q14">14. Confirmação correta dos dados do cliente (nome, CPF, linha)?</label>
+    <select id="q14" name="q14" required>
+      <option value="">Selecione</option>
+      <option value="1">Sim</option>
+      <option value="0">Não</option>
+    </select>
+
+    <label for="q15">15. Validação de informações sensíveis de forma segura?</label>
+    <select id="q15" name="q15" required>
+      <option value="">Selecione</option>
+      <option value="1">Sim</option>
+      <option value="0">Não</option>
+    </select>
+
+    <label for="q16">16. Coleta apenas do necessário para a demanda?</label>
+    <select id="q16" name="q16" required>
+      <option value="">Selecione</option>
+      <option value="1">Sim</option>
+      <option value="0">Não</option>
+    </select>
+
+    <label for="q17">17. Registro no sistema paralelo (caso haja CRM)?</label>
+    <select id="q17" name="q17" required>
+      <option value="">Selecione</option>
+      <option value="1">Sim</option>
+      <option value="0">Não</option>
+    </select>
+
+    <label for="q18">18. Entendimento total do problema antes de responder?</label>
+    <select id="q18" name="q18" required>
+      <option value="">Selecione</option>
+      <option value="1">Sim</option>
+      <option value="0">Não</option>
+    </select>
+
+    <label for="q19">19. Explicação clara dos procedimentos?</label>
+    <select id="q19" name="q19" required>
+      <option value="">Selecione</option>
+      <option value="1">Sim</option>
+      <option value="0">Não</option>
+    </select>
+
+    <label for="q20">20. Passo a passo para o cliente, quando necessário?</label>
+    <select id="q20" name="q20" required>
+      <option value="">Selecione</option>
+      <option value="1">Sim</option>
+      <option value="0">Não</option>
+    </select>
+
+    <label for="q21">21. Cumprimento de políticas internas da operadora?</label>
+    <select id="q21" name="q21" required>
+      <option value="">Selecione</option>
+      <option value="1">Sim</option>
+      <option value="0">Não</option>
+    </select>
+
+    <label for="q22">22. Uso correto de scripts obrigatórios?</label>
+    <select id="q22" name="q22" required>
+      <option value="">Selecione</option>
+      <option value="1">Sim</option>
+      <option value="0">Não</option>
+    </select>
+
+    <label for="q23">23. Mostrou compreensão pela situação do cliente?</label>
+    <select id="q23" name="q23" required>
+      <option value="">Selecione</option>
+      <option value="1">Sim</option>
+      <option value="0">Não</option>
+    </select>
+
+    <label for="q24">24. Evitou respostas automáticas que não condizem com o caso?</label>
+    <select id="q24" name="q24" required>
+      <option value="">Selecione</option>
+      <option value="1">Sim</option>
+      <option value="0">Não</option>
+    </select>
+
+    <label for="q25">25. Manteve calma e cordialidade mesmo em casos de cliente irritado?</label>
+    <select id="q25" name="q25" required>
+      <option value="">Selecione</option>
+      <option value="1">Sim</option>
+      <option value="0">Não</option>
+    </select>
+
+    <label for="q26">26. Confirmou que o problema foi resolvido?</label>
+    <select id="q26" name="q26" required>
+      <option value="">Selecione</option>
+      <option value="1">Sim</option>
+      <option value="0">Não</option>
+    </select>
+
+    <label for="q27">27. Orientou sobre próximos passos ou protocolos?</label>
+    <select id="q27" name="q27" required>
+      <option value="">Selecione</option>
+      <option value="1">Sim</option>
+      <option value="0">Não</option>
+    </select>
+
+    <button type="button" onclick="gerarPDF()">Baixar PDF</button>
+  </form>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+  // Perguntas correspondentes ao formulário
+  const perguntas = [
+    "Tempo total do atendimento",
+    "Houve pausas excessivas sem justificativa?",
+    "Se despediu de forma formal e cordial?",
+    "Operadora",
+    "Tipo de solicitação (cancelamento, fatura, portabilidade, etc.)",
+    "Identificação do cliente confirmada?",
+    "Uso do nome do cliente durante a conversa?",
+    "Tom educado e profissional no texto?",
+    "Tempo para responder a primeira mensagem dentro do SLA?",
+    "Linguagem clara, sem termos técnicos desnecessários?",
+    "Mensagens objetivas, sem textos longos que confundam?",
+    "Escrita correta (gramática e ortografia)?",
+    "Uso adequado de emojis e formatação?",
+    "Confirmação correta dos dados do cliente (nome, CPF, linha)?",
+    "Validação de informações sensíveis de forma segura?",
+    "Coleta apenas do necessário para a demanda?",
+    "Registro no sistema paralelo (caso haja CRM)?",
+    "Entendimento total do problema antes de responder?",
+    "Explicação clara dos procedimentos?",
+    "Passo a passo para o cliente, quando necessário?",
+    "Cumprimento de políticas internas da operadora?",
+    "Uso correto de scripts obrigatórios?",
+    "Mostrou compreensão pela situação do cliente?",
+    "Evito respostas automáticas que não condizem com o caso?",
+    "Manteve calma e cordialidade mesmo em casos de cliente irritado?",
+    "Confirmou que o problema foi resolvido?",
+    "Orientou sobre próximos passos ou protocolos?"
+  ];
+
+  // Pesos para pontuação (1=menos importante, 2=importante, 3=muito importante)
+  const pesos = [
+    1,  // 1. Tempo total do atendimento - sem pontuação, mas coloquei peso 1 para organização
+    1,  // 2.
+    3,  // 3.
+    1,  // 4. Operadora (sem pontuação)
+    1,  // 5. Tipo de solicitação (sem pontuação)
+    3,  // 6.
+    2,  // 7.
+    3,  // 8.
+    3,  // 9.
+    3,  // 10.
+    2,  // 11.
+    3,  // 12.
+    1,  // 13.
+    3,  // 14.
+    3,  // 15.
+    2,  // 16.
+    1,  // 17.
+    3,  // 18.
+    3,  // 19.
+    2,  // 20.
+    2,  // 21.
+    2,  // 22.
+    3,  // 23.
+    2,  // 24.
+    3,  // 25.
+    3,  // 26.
+    2   // 27.
+  ];
+
+  function gerarPDF() {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+
+    let y = 15;
+    const lineHeight = 8;
+    const margin = 10;
+
+    // Título
+    doc.setFontSize(16);
+    doc.setTextColor("#6a0dad");
+    doc.text("Monitoria de Atendimento Wick", margin, y);
+    y += lineHeight * 1.5;
+
+    doc.setFontSize(12);
+    doc.setTextColor("#000");
+
+    // Formatação da data
+    const dataRaw = document.getElementById("data").value || "";
+    let dataFormatada = "Não informado";
+    if (dataRaw) {
+      const partes = dataRaw.split("-");
+      if (partes.length === 3) {
+        dataFormatada = `${partes[2]}/${partes[1]}/${partes[0]}`;
+      }
+    }
+
+    // Dados básicos
+    const avaliador = document.getElementById("avaliador").value.trim() || "Não informado";
+    const avaliado = document.getElementById("avaliado").value.trim() || "Não informado";
+    const cliente = document.getElementById("cliente").value.trim() || "Não informado";
+    const protocolo = document.getElementById("protocolo").value.trim() || "Não informado";
+
+    doc.text(`Data: ${dataFormatada}`, margin, y); y += lineHeight;
+    doc.text(`Avaliador: ${avaliador}`, margin, y); y += lineHeight;
+    doc.text(`Avaliado: ${avaliado}`, margin, y); y += lineHeight;
+    doc.text(`Cliente: ${cliente}`, margin, y); y += lineHeight;
+    doc.text(`Protocolo: ${protocolo}`, margin, y); y += lineHeight * 1.5;
+
+    // Pergunta 1 (texto livre)
+    let resposta = document.getElementById("q1").value.trim();
+    if (!resposta) resposta = "Não respondido";
+    const q1Text = `1 - ${perguntas[0]}: ${resposta}`;
+    y = quebraLinha(doc, q1Text, margin, y, lineHeight);
+
+    let totalPontos = 0;
+    let pontosObtidos = 0;
+
+    for (let i = 1; i <= 26; i++) {
+      let resposta = "";
+      let valor = 0;
+
+      if (i === 3) { // Pergunta 4: Operadora (sem pontuação)
+        resposta = document.getElementById("q4").value || "Não respondido";
+      } else if (i === 4) { // Pergunta 5: Texto livre (sem pontuação)
+        resposta = document.getElementById("q5").value.trim();
+        if (!resposta) resposta = "Não respondido";
+      } else {
+        const sel = document.getElementById(`q${i + 1}`);
+        if (!sel || !sel.value) {
+          resposta = "Não respondido";
+        } else {
+          resposta = sel.value;
+        }
+        if (resposta === "1") valor = 1;
+        else valor = 0;
+      }
+
+      const peso = (typeof pesos[i] === 'number') ? pesos[i] : 1;
+
+      // Somente perguntas com resposta 1 ou 0 entram na pontuação
+      if (valor === 1 || valor === 0) {
+        totalPontos += peso;
+        pontosObtidos += valor * peso;
+      }
+
+      // Texto no PDF
+      let textoExibir = "";
+      if (i === 3 || i === 4) {
+        textoExibir = `${i + 1} - ${perguntas[i]}: ${resposta}`;
+      } else {
+        textoExibir = `${i + 1} - ${perguntas[i]}: ${resposta === "1" ? "Sim" : resposta === "0" ? "Não" : resposta}`;
+      }
+      y = quebraLinha(doc, textoExibir, margin, y, lineHeight);
+    }
+
+    y += lineHeight;
+
+    // Resultado final de pontuação
+    const percentual = totalPontos ? ((pontosObtidos / totalPontos) * 100).toFixed(2) : "0.00";
+    doc.setTextColor("#6a0dad");
+    doc.setFontSize(14);
+    doc.text(`Pontuação final: ${pontosObtidos} / ${totalPontos} (${percentual}%)`, margin, y);
+
+    doc.save(`Monitoria_${avaliado}_${dataFormatada.replace(/\//g, '-')}.pdf`);
+  }
+
+  // Função para quebrar linha e página se necessário no PDF
+  function quebraLinha(doc, texto, margin, y, lineHeight) {
+    const pageHeight = doc.internal.pageSize.height;
+    const maxWidth = doc.internal.pageSize.width - margin * 2;
+    const linhas = doc.splitTextToSize(texto, maxWidth);
+    if (y + linhas.length * lineHeight > pageHeight - margin) {
+      doc.addPage();
+      y = margin;
+    }
+    doc.text(linhas, margin, y);
+    y += linhas.length * lineHeight;
+    return y;
+  }
+</script>
+
+</body>
+</html>
