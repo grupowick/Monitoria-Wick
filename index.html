@@ -65,11 +65,18 @@
     padding: 12px 20px;
     border-radius: 7px;
     margin-top: 25px;
+    margin-right: 10px;
     cursor: pointer;
     transition: background-color 0.25s ease;
   }
   button:hover {
     background-color: #e56b00;
+  }
+  .limpar-btn {
+    background-color: #6a0dad;
+  }
+  .limpar-btn:hover {
+    background-color: #5a0099;
   }
 </style>
 </head>
@@ -94,6 +101,7 @@
     <label for="data">Data:</label>
     <input type="date" id="data" name="data" required>
 
+    <!-- Perguntas originais -->
     <label for="q1">1. Tempo total do atendimento:</label>
     <textarea id="q1" name="q1" placeholder="Descreva o tempo total do atendimento"></textarea>
 
@@ -278,180 +286,174 @@
     </select>
 
     <button type="button" onclick="gerarPDF()">Baixar PDF</button>
+    <button type="button" class="limpar-btn" onclick="limparPerguntas()">Limpar Perguntas</button>
   </form>
 </div>
 
-<!-- Imagem escondida, só para pegar no script -->
 <img id="logoWick" src="https://i.postimg.cc/WpY8c1jL/wick-roxo-sem-fundo.png" style="display:none;" crossorigin="anonymous" />
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
-  const perguntas = [
-    "Tempo total do atendimento",
-    "Houve pausas excessivas sem justificativa?",
-    "Se despediu de forma formal e cordial?",
-    "Operadora",
-    "Tipo de solicitação (cancelamento, fatura, portabilidade, etc.)",
-    "Identificação do cliente confirmada?",
-    "Uso do nome do cliente durante a conversa?",
-    "Tom educado e profissional no texto?",
-    "Tempo para responder a primeira mensagem dentro do SLA?",
-    "Linguagem clara, sem termos técnicos desnecessários?",
-    "Mensagens objetivas, sem textos longos que confundam?",
-    "Escrita correta (gramática e ortografia)?",
-    "Uso adequado de emojis e formatação?",
-    "Confirmação correta dos dados do cliente (nome, CPF, linha)?",
-    "Validação de informações sensíveis de forma segura?",
-    "Coleta apenas do necessário para a demanda?",
-    "Registro no sistema/Tabulação?",
-    "Entendimento total do problema antes de responder?",
-    "Explicação clara dos procedimentos?",
-    "Passo a passo para o cliente, quando necessário?",
-    "Cumprimento de políticas internas da operadora?",
-    "Uso correto de scripts obrigatórios?",
-    "Mostrou compreensão pela situação do cliente?",
-    "Evito respostas automáticas que não condizem com o caso?",
-    "Manteve calma e cordialidade mesmo em casos de cliente irritado?",
-    "Confirmou que o problema foi resolvido?",
-    "Orientou sobre próximos passos ou protocolos?"
-  ];
+const perguntas = [
+  "Tempo total do atendimento",
+  "Houve pausas excessivas sem justificativa?",
+  "Se despediu de forma formal e cordial?",
+  "Operadora",
+  "Tipo de solicitação (cancelamento, fatura, portabilidade, etc.)",
+  "Identificação do cliente confirmada?",
+  "Uso do nome do cliente durante a conversa?",
+  "Tom educado e profissional no texto?",
+  "Tempo para responder a primeira mensagem dentro do SLA?",
+  "Linguagem clara, sem termos técnicos desnecessários?",
+  "Mensagens objetivas, sem textos longos que confundam?",
+  "Escrita correta (gramática e ortografia)?",
+  "Uso adequado de emojis e formatação?",
+  "Confirmação correta dos dados do cliente (nome, CPF, linha)?",
+  "Validação de informações sensíveis de forma segura?",
+  "Coleta apenas do necessário para a demanda?",
+  "Registro no sistema/Tabulação?",
+  "Entendimento total do problema antes de responder?",
+  "Explicação clara dos procedimentos?",
+  "Passo a passo para o cliente, quando necessário?",
+  "Cumprimento de políticas internas da operadora?",
+  "Uso correto de scripts obrigatórios?",
+  "Mostrou compreensão pela situação do cliente?",
+  "Evito respostas automáticas que não condizem com o caso?",
+  "Manteve calma e cordialidade mesmo em casos de cliente irritado?",
+  "Confirmou que o problema foi resolvido?",
+  "Orientou sobre próximos passos ou protocolos?"
+];
 
-  const pesos = [
-    1, 1, 3, 0, 1, 3, 2, 3, 3, 3,
-    2, 3, 1, 3, 3, 2, 1, 3, 3, 2,
-    2, 2, 3, 2, 3, 3, 2
-  ];
+const pesos = [
+  1, 1, 3, 0, 1, 3, 2, 3, 3, 3,
+  2, 3, 1, 3, 3, 2, 1, 3, 3, 2,
+  2, 2, 3, 2, 3, 3, 2
+];
 
-  function quebraLinha(doc, texto, x, y, lineHeight, maxWidth = 180) {
-    const splitText = doc.splitTextToSize(texto, maxWidth);
-    splitText.forEach((line, i) => {
-      doc.text(line, x, y + (i * lineHeight));
-    });
-    return y + (splitText.length * lineHeight);
+function quebraLinha(doc, texto, x, y, lineHeight, maxWidth = 180) {
+  const splitText = doc.splitTextToSize(texto, maxWidth);
+  splitText.forEach((line, i) => {
+    doc.text(line, x, y + (i * lineHeight));
+  });
+  return y + (splitText.length * lineHeight);
+}
+
+function checarQuebraPagina(doc, y, lineHeight, margemInferior = 20) {
+  const paginaAltura = doc.internal.pageSize.getHeight();
+  if (y + lineHeight > paginaAltura - margemInferior) {
+    doc.addPage();
+    return 10;
+  }
+  return y;
+}
+
+async function gerarPDF() {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+
+  const img = document.getElementById('logoWick');
+  if (!img.complete) await new Promise(resolve => { img.onload = resolve; img.onerror = resolve; });
+
+  const imgWidth = 50;
+  const imgHeight = 15;
+  const pageWidth = doc.internal.pageSize.getWidth();
+  const imgX = pageWidth - imgWidth - 10;
+  const imgY = 10;
+  doc.addImage(img, 'PNG', imgX, imgY, imgWidth, imgHeight);
+
+  let y = imgY + 5;
+  const margin = 10;
+  const lineHeight = 8;
+
+  doc.setFontSize(16);
+  doc.setTextColor("#6a0dad");
+  doc.text("Monitoria de Atendimento Wick", margin, y);
+  y += lineHeight * 1.5;
+
+  doc.setFontSize(12);
+  doc.setTextColor("#000");
+
+  const dataRaw = document.getElementById("data").value || "";
+  let dataFormatada = "Não informado";
+  if (dataRaw) {
+    const partes = dataRaw.split("-");
+    if (partes.length === 3) dataFormatada = `${partes[2]}/${partes[1]}/${partes[0]}`;
   }
 
-  function checarQuebraPagina(doc, y, lineHeight, margemInferior = 20) {
-    const paginaAltura = doc.internal.pageSize.getHeight();
-    if (y + lineHeight > paginaAltura - margemInferior) {
-      doc.addPage();
-      return 10;
+  const avaliador = document.getElementById("avaliador").value.trim() || "Não informado";
+  const avaliado = document.getElementById("avaliado").value.trim() || "Não informado";
+  const cliente = document.getElementById("cliente").value.trim() || "Não informado";
+  const protocolo = document.getElementById("protocolo").value.trim() || "Não informado";
+
+  y = checarQuebraPagina(doc, y, lineHeight);
+  doc.text(`Data: ${dataFormatada}`, margin, y);
+  y += lineHeight;
+  y = checarQuebraPagina(doc, y, lineHeight);
+  doc.text(`Avaliador: ${avaliador}`, margin, y);
+  y += lineHeight;
+  y = checarQuebraPagina(doc, y, lineHeight);
+  doc.text(`Avaliado: ${avaliado}`, margin, y);
+  y += lineHeight;
+  y = checarQuebraPagina(doc, y, lineHeight);
+  doc.text(`Cliente: ${cliente}`, margin, y);
+  y += lineHeight;
+  y = checarQuebraPagina(doc, y, lineHeight);
+  doc.text(`Protocolo: ${protocolo}`, margin, y);
+  y += lineHeight * 1.5;
+
+  let somaPontos = 0;
+  let totalPeso = 0;
+
+  for (let i = 0; i < perguntas.length; i++) {
+    const num = i + 1;
+    let resposta = "";
+
+    if (num === 1 || num === 5) {
+      const el = document.getElementById(`q${num}`);
+      resposta = el ? el.value.trim() : "";
+      if (!resposta) resposta = "Não respondido";
+    } else if (num === 4) {
+      const el = document.getElementById(`q${num}`);
+      resposta = el ? el.value : "";
+      if (!resposta) resposta = "Não informado";
+    } else {
+      const el = document.getElementById(`q${num}`);
+      resposta = el ? el.value : "";
+      if (!resposta) resposta = "Não respondido";
+      if (resposta === "1") resposta = "Sim";
+      else if (resposta === "0") resposta = "Não";
     }
-    return y;
+
+    const textoPergunta = `${num} - ${perguntas[i]}: ${resposta}`;
+    y = checarQuebraPagina(doc, y, lineHeight);
+    y = quebraLinha(doc, textoPergunta, margin, y, lineHeight);
+
+    // Soma de pontos apenas para perguntas 2,3,6-27
+    if (resposta === "Sim" && ![1,4,5].includes(num)) somaPontos += pesos[i];
+    if (![1,4,5].includes(num)) totalPeso += pesos[i];
+
+    y += lineHeight / 2;
   }
 
-  async function gerarPDF() {
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
+  y = checarQuebraPagina(doc, y, lineHeight * 2);
+  const percentual = totalPeso > 0 ? (somaPontos / totalPeso) * 100 : 0;
+  doc.setFontSize(14);
+  doc.setTextColor("#6a0dad");
+  doc.text(`Nota final: ${percentual.toFixed(2)}%`, margin, y);
 
-    const img = document.getElementById('logoWick');
-    if (!img.complete) {
-      await new Promise(resolve => {
-        img.onload = resolve;
-        img.onerror = resolve;
-      });
+  doc.save("monitoria_atendimento_wick.pdf");
+}
+
+// Limpar perguntas q1 a q27
+function limparPerguntas() {
+  for (let i = 1; i <= 27; i++) {
+    const el = document.getElementById(`q${i}`);
+    if (el) {
+      if (el.tagName === "SELECT") el.value = "";
+      else if (el.tagName === "TEXTAREA") el.value = "";
     }
-
-    const imgWidth = 50;
-    const imgHeight = 15;
-    const pageWidth = doc.internal.pageSize.getWidth();
-
-    const imgX = pageWidth - imgWidth - 10;
-    const imgY = 10;
-
-    doc.addImage(img, 'PNG', imgX, imgY, imgWidth, imgHeight);
-
-    let y = imgY + 5;
-    const margin = 10;
-    const lineHeight = 8;
-
-    doc.setFontSize(16);
-    doc.setTextColor("#6a0dad");
-    doc.text("Monitoria de Atendimento Wick", margin, y);
-    y += lineHeight * 1.5;
-
-    doc.setFontSize(12);
-    doc.setTextColor("#000");
-
-    const dataRaw = document.getElementById("data").value || "";
-    let dataFormatada = "Não informado";
-    if (dataRaw) {
-      const partes = dataRaw.split("-");
-      if (partes.length === 3) {
-        dataFormatada = `${partes[2]}/${partes[1]}/${partes[0]}`;
-      }
-    }
-
-    const avaliador = document.getElementById("avaliador").value.trim() || "Não informado";
-    const avaliado = document.getElementById("avaliado").value.trim() || "Não informado";
-    const cliente = document.getElementById("cliente").value.trim() || "Não informado";
-    const protocolo = document.getElementById("protocolo").value.trim() || "Não informado";
-
-    y = checarQuebraPagina(doc, y, lineHeight);
-    doc.text(`Data: ${dataFormatada}`, margin, y);
-    y += lineHeight;
-
-    y = checarQuebraPagina(doc, y, lineHeight);
-    doc.text(`Avaliador: ${avaliador}`, margin, y);
-    y += lineHeight;
-
-    y = checarQuebraPagina(doc, y, lineHeight);
-    doc.text(`Avaliado: ${avaliado}`, margin, y);
-    y += lineHeight;
-
-    y = checarQuebraPagina(doc, y, lineHeight);
-    doc.text(`Cliente: ${cliente}`, margin, y);
-    y += lineHeight;
-
-    y = checarQuebraPagina(doc, y, lineHeight);
-    doc.text(`Protocolo: ${protocolo}`, margin, y);
-    y += lineHeight * 1.5;
-
-    let somaPontos = 0;
-    let totalPeso = 0;
-
-    for (let i = 0; i < perguntas.length; i++) {
-      const num = i + 1;
-      let resposta = "";
-
-      if (num === 1 || num === 5) {
-        const el = document.getElementById(`q${num}`);
-        resposta = el ? el.value.trim() : "";
-        if (!resposta) resposta = "Não respondido";
-      } else {
-        const el = document.getElementById(`q${num}`);
-        resposta = el ? el.value : "";
-        if (!resposta) resposta = "Não respondido";
-
-        if (resposta === "1") {
-          resposta = "Sim";
-        } else if (resposta === "0") {
-          resposta = "Não";
-        }
-      }
-
-      const textoPergunta = `${num} - ${perguntas[i]}: ${resposta}`;
-
-      y = checarQuebraPagina(doc, y, lineHeight);
-      y = quebraLinha(doc, textoPergunta, margin, y, lineHeight);
-
-      if (resposta === "Sim") {
-        somaPontos += pesos[i];
-      }
-      if (num !== 1 && num !== 5) {
-        totalPeso += pesos[i];
-      }
-
-      y += lineHeight / 2;
-    }
-
-    y = checarQuebraPagina(doc, y, lineHeight * 2);
-    const percentual = totalPeso > 0 ? (somaPontos / totalPeso) * 100 : 0;
-    doc.setFontSize(14);
-    doc.setTextColor("#6a0dad");
-    doc.text(`Nota final: ${percentual.toFixed(2)}%`, margin, y);
-
-    doc.save("monitoria_atendimento_wick.pdf");
   }
+}
 </script>
 
 </body>
