@@ -52,7 +52,6 @@
     padding: 0 20px;
   }
 
-  /* Estilização dos Blocos Lógicos (Fases do Atendimento) */
   .section-card {
     background: var(--bg-card);
     border-radius: 16px;
@@ -99,7 +98,6 @@
     font-size: 14px;
   }
 
-  /* Inputs Modernizados e Fluidos */
   input[type=text], input[type=date], select, textarea {
     width: 100%;
     padding: 14px 16px;
@@ -133,7 +131,6 @@
     min-height: 80px;
   }
 
-  /* Botões com Efeito de Fluidez */
   .actions-container {
     display: flex;
     gap: 20px;
@@ -442,6 +439,18 @@
         </select>
       </div>
 
+      <!-- NOVA PERGUNTA INSERIDA AQUI -->
+      <div class="form-group">
+        <label for="q28">Fez a transferência de forma devida?</label>
+        <select id="q28" name="q28">
+          <option value="">Selecione</option>
+          <option value="1">Sim</option>
+          <option value="0">Não</option>
+          <option value="cliente_nao_transferido">Cliente não foi transferido</option>
+          <option value="nao_houve_necessidade">Não houve necessidade de transferência</option>
+        </select>
+      </div>
+
       <div class="form-group">
         <label for="q17">Registro no sistema/Tabulação?</label>
         <select id="q17" name="q17">
@@ -522,13 +531,14 @@ const perguntas = [
   "Evitou respostas automáticas que não condizem com o caso?",
   "Manteve calma e cordialidade mesmo em casos de cliente irritado?",
   "Confirmou que o problema foi resolvido?",
-  "Orientou sobre próximos passos ou protocolos?"
+  "Orientou sobre próximos passos ou protocolos?",
+  "Fez a transferência de forma devida?" /* Pergunta 28 adicionada na lista */
 ];
 
 const pesos = [
   1, 1, 3, 0, 1, 3, 2, 3, 3, 3,
   2, 3, 1, 3, 3, 2, 1, 3, 3, 2,
-  2, 2, 3, 2, 3, 3, 2
+  2, 2, 3, 2, 3, 3, 2, 2 /* Peso atribuído para a pergunta 28 */
 ];
 
 function quebraLinha(doc, texto, x, y, lineHeight, maxWidth = 180) {
@@ -609,16 +619,22 @@ async function gerarPDF() {
     const num = i + 1;
     let resposta = "";
 
+    const el = document.getElementById(`q${num}`);
     if (num === 1 || num === 5) {
-      const el = document.getElementById(`q${num}`);
       resposta = el ? el.value.trim() : "";
       if (!resposta) resposta = "Não respondido";
     } else if (num === 4) {
-      const el = document.getElementById(`q${num}`);
       resposta = el ? el.value : "";
       if (!resposta) resposta = "Não informado";
+    } else if (num === 28) {
+      // Tratamento personalizado da exibição da resposta da pergunta nova no PDF
+      const val = el ? el.value : "";
+      if (val === "1") resposta = "Sim";
+      else if (val === "0") resposta = "Não";
+      else if (val === "cliente_nao_transferido") resposta = "Cliente não foi transferido";
+      else if (val === "nao_houve_necessidade") resposta = "Não houve necessidade de transferência";
+      else resposta = "Não respondido";
     } else {
-      const el = document.getElementById(`q${num}`);
       resposta = el ? el.value : "";
       if (!resposta) resposta = "Não respondido";
       if (resposta === "1") resposta = "Sim";
@@ -629,8 +645,16 @@ async function gerarPDF() {
     y = checarQuebraPagina(doc, y, lineHeight);
     y = quebraLinha(doc, textoPergunta, margin, y, lineHeight);
 
-    if (resposta === "Sim" && ![1,4,5].includes(num)) somaPontos += pesos[i];
-    if (![1,4,5].includes(num)) totalPeso += pesos[i];
+    // Regra de soma de pontos
+    if (![1,4,5].includes(num)) {
+      // Se for a pergunta 28 e a opção for de "não houve necessidade", ela neutraliza o peso para não prejudicar a nota
+      if (num === 28 && ["cliente_nao_transferido", "nao_houve_necessidade"].includes(el?.value)) {
+         // Não soma no total nem nos pontos (Ignora o peso)
+      } else {
+         if (resposta === "Sim") somaPontos += pesos[i];
+         totalPeso += pesos[i];
+      }
+    }
 
     y += lineHeight / 2;
   }
@@ -645,7 +669,7 @@ async function gerarPDF() {
 }
 
 function limparPerguntas() {
-  for (let i = 1; i <= 27; i++) {
+  for (let i = 1; i <= 28; i++) {
     const el = document.getElementById(`q${i}`);
     if (el) {
       if (el.tagName === "SELECT") el.value = "";
