@@ -6,31 +6,31 @@
 <title>Monitoria de Atendimento Wick</title>
 <style>
   :root {
-    --bg-main: #0f0c1b;
-    --bg-card: #1a162e;
-    --primary: #9d4edf;
-    --primary-glow: rgba(157, 78, 223, 0.2);
+    --bg-main: #f5f7fb;
+    --bg-card: #ffffff;
+    --primary: #7b2cbf;
+    --primary-glow: rgba(123,44,191,.15);
     --secondary: #ff7b00;
-    --text-main: #f3f0ff;
-    --text-muted: #a29bfe;
-    --border: #2d264d;
-    --success: #00e676;
-  }
+    --text-main: #1f2937;
+    --text-muted: #6b7280;
+    --border: #e5e7eb;
+    --success: #16a34a;
+}
 
   body {
     margin: 0; padding: 0;
     font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    background-color: var(--bg-main);
-    color: var(--text-main);
+    background: linear-gradient(135deg,#f8fafc,#eef2ff);
+    color: #1f2937;
     min-height: 100vh;
   }
 
   header {
-    background: rgba(26, 22, 46, 0.8);
+    background: rgba(255,255,255,.88);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--border);
-    color: var(--text-main);
+    border-bottom: 1px solid #e5e7eb;
+    color: #1f2937;
     font-weight: 800;
     font-size: 24px;
     letter-spacing: 0.5px;
@@ -39,7 +39,7 @@
     position: sticky;
     top: 0;
     z-index: 100;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    box-shadow: 0 4px 20px rgba(0,0,0,.08);
   }
 
   header span {
@@ -53,12 +53,12 @@
   }
 
   .section-card {
-    background: var(--bg-card);
+    background: #ffffff;
     border-radius: 16px;
     padding: 30px;
     margin-bottom: 30px;
     border: 1px solid var(--border);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 8px 25px rgba(0,0,0,.06);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
   }
 
@@ -104,17 +104,17 @@
     font-size: 15px;
     border-radius: 10px;
     border: 1px solid var(--border);
-    background-color: #120e24;
+    background-color: #ffffff;
     box-sizing: border-box;
     transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-    color: #fff;
+    color: #111827;
     font-family: inherit;
   }
 
   input[type=text]:focus, input[type=date]:focus, select:focus, textarea:focus {
     outline: none;
     border-color: var(--primary);
-    background-color: #161033;
+    background-color: #ffffff;
     box-shadow: 0 0 0 4px var(--primary-glow);
   }
 
@@ -664,6 +664,19 @@ async function gerarPDF() {
   doc.setFontSize(14);
   doc.setTextColor("#6a0dad");
   doc.text(`Nota final: ${percentual.toFixed(2)}%`, margin, y);
+
+  
+  // Classificação visual da avaliação
+  let classificacao = "";
+  if (percentual >= 90) classificacao = "Excelente";
+  else if (percentual >= 75) classificacao = "Bom";
+  else if (percentual >= 60) classificacao = "Regular";
+  else classificacao = "Necessita melhoria";
+
+  y += 12;
+  doc.setFontSize(12);
+  doc.setTextColor("#7b2cbf");
+  doc.text(`Classificação: ${classificacao}`, margin, y);
 
   doc.save("monitoria_atendimento_wick.pdf");
 }
