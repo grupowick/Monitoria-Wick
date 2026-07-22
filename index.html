@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Monitoria de Atendimento Wick</title>
+<title>Monitoria de Atendimento - Wick</title>
 <style>
   :root {
-    --bg-main: #f5f7fb;
+    --bg-main: #f8fafc;
     --bg-card: #ffffff;
     --primary: #7b2cbf;
     --primary-glow: rgba(123,44,191,.15);
@@ -15,22 +15,41 @@
     --text-muted: #6b7280;
     --border: #e5e7eb;
     --success: #16a34a;
-}
+    --input-bg: #fafbfc;
+    --preview-bg: linear-gradient(135deg, #ffffff, #faf5ff);
+    --obs-bg: #fffbf5;
+    --toggle-circle: #000000;
+  }
+
+  [data-theme="dark"] {
+    --bg-main: #0f172a;
+    --bg-card: #1e293b;
+    --primary: #9d4edd;
+    --primary-glow: rgba(157,78,221,.25);
+    --secondary: #ff9e00;
+    --text-main: #f1f5f9;
+    --text-muted: #94a3b8;
+    --border: #334155;
+    --success: #22c55e;
+    --input-bg: #0f172a;
+    --preview-bg: linear-gradient(135deg, #1e293b, #2e1065);
+    --obs-bg: #292524;
+    --toggle-circle: #ffffff;
+  }
 
   body {
     margin: 0; padding: 0;
     font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    background: linear-gradient(135deg,#f8fafc,#eef2ff);
-    color: #1f2937;
+    background: var(--bg-main);
+    color: var(--text-main);
     min-height: 100vh;
+    transition: background 0.3s ease, color 0.3s ease;
   }
 
   header {
-    background: rgba(255,255,255,.88);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border-bottom: 1px solid #e5e7eb;
-    color: #1f2937;
+    background: var(--bg-card);
+    border-bottom: 1px solid var(--border);
+    color: var(--text-main);
     font-weight: 800;
     font-size: 24px;
     letter-spacing: 0.5px;
@@ -39,36 +58,160 @@
     position: sticky;
     top: 0;
     z-index: 100;
-    box-shadow: 0 4px 20px rgba(0,0,0,.08);
+    box-shadow: 0 4px 20px rgba(0,0,0,.06);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-left: 30px;
+    padding-right: 30px;
+  }
+
+  .header-brand {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin: 0 auto;
+  }
+
+  header img {
+    height: 35px;
   }
 
   header span {
     color: var(--secondary);
   }
 
+  .theme-toggle-btn {
+    background: var(--input-bg);
+    border: 1px solid var(--border);
+    color: var(--text-main);
+    padding: 8px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    box-shadow: none;
+    text-transform: none;
+    letter-spacing: normal;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: unset;
+  }
+
+  .theme-toggle-btn:hover {
+    border-color: var(--primary);
+    transform: none;
+    box-shadow: 0 0 10px var(--primary-glow);
+  }
+
+  .theme-circle {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: var(--toggle-circle);
+    display: inline-block;
+    border: 1px solid var(--border);
+  }
+
+  .progress-container {
+    position: sticky;
+    top: 76px;
+    z-index: 90;
+    background: var(--bg-card);
+    padding: 12px 25px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    transition: background 0.3s ease;
+  }
+
+  .progress-label-wrap {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-muted);
+  }
+
+  .progress-bar {
+    height: 8px;
+    border-radius: 20px;
+    background: var(--border);
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--primary), var(--secondary));
+    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
   .container {
-    max-width: 850px;
-    margin: 40px auto 60px auto;
+    max-width: 900px;
+    margin: 30px auto 60px auto;
     padding: 0 20px;
   }
 
+  .score-preview {
+    background: var(--preview-bg);
+    border-radius: 16px;
+    padding: 24px 30px;
+    box-shadow: 0 10px 30px rgba(123, 44, 191, 0.08);
+    margin-bottom: 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid var(--border);
+  }
+
+  .score-preview strong {
+    font-size: 18px;
+    color: var(--primary);
+  }
+
+  .score-preview small {
+    color: var(--text-muted);
+    font-size: 14px;
+  }
+
+  .badge {
+    padding: 10px 20px;
+    border-radius: 30px;
+    background: var(--primary);
+    color: #ffffff;
+    font-weight: 800;
+    font-size: 20px;
+    box-shadow: 0 4px 15px var(--primary-glow);
+    transition: all 0.3s ease;
+  }
+
   .section-card {
-    background: #ffffff;
+    background: var(--bg-card);
     border-radius: 16px;
     padding: 30px;
     margin-bottom: 30px;
     border: 1px solid var(--border);
-    box-shadow: 0 8px 25px rgba(0,0,0,.06);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 8px 25px rgba(0,0,0,.04);
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+    animation: fadeIn 0.5s ease;
   }
 
   .section-card:hover {
-    box-shadow: 0 8px 32px var(--primary-glow);
-    border-color: #44337a;
+    box-shadow: 0 12px 35px var(--primary-glow);
+    border-color: var(--primary);
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(15px); }
+    to { opacity: 1; transform: none; }
   }
 
   .section-title {
-    font-size: 19px;
+    font-size: 17px;
     font-weight: 700;
     color: var(--secondary);
     margin-top: 0;
@@ -78,6 +221,8 @@
     gap: 10px;
     text-transform: uppercase;
     letter-spacing: 1px;
+    border-bottom: 2px solid var(--border);
+    padding-bottom: 10px;
   }
 
   .grid-2 {
@@ -90,11 +235,26 @@
     margin-bottom: 22px;
   }
 
+  .obs-container {
+    margin-top: 8px;
+    margin-bottom: 20px;
+    padding: 12px;
+    background: var(--obs-bg);
+    border-left: 3px solid var(--secondary);
+    border-radius: 0 8px 8px 0;
+    display: none;
+    animation: fadeIn 0.3s ease;
+  }
+
+  .obs-container.active {
+    display: block;
+  }
+
   label {
     font-weight: 600;
     color: var(--text-muted);
     display: block;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
     font-size: 14px;
   }
 
@@ -104,24 +264,24 @@
     font-size: 15px;
     border-radius: 10px;
     border: 1px solid var(--border);
-    background-color: #ffffff;
+    background-color: var(--input-bg);
     box-sizing: border-box;
     transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-    color: #111827;
+    color: var(--text-main);
     font-family: inherit;
   }
 
   input[type=text]:focus, input[type=date]:focus, select:focus, textarea:focus {
     outline: none;
     border-color: var(--primary);
-    background-color: #ffffff;
+    background-color: var(--bg-card);
     box-shadow: 0 0 0 4px var(--primary-glow);
   }
 
   select {
     cursor: pointer;
     appearance: none;
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='10' fill='%239d4edf'><path d='M0 3l5 5 5-5z'/></svg>");
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%239d4edd'><path d='M0 3l6 6 6-6z'/></svg>");
     background-repeat: no-repeat;
     background-position: right 16px center;
   }
@@ -137,7 +297,7 @@
     margin-top: 40px;
   }
 
-  button {
+  button.main-btn {
     flex: 1;
     background: linear-gradient(135deg, var(--secondary) 0%, #ff5500 100%);
     color: white;
@@ -153,22 +313,32 @@
     letter-spacing: 0.5px;
   }
 
-  button:hover {
+  button.main-btn:hover {
     transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(255, 123, 0, 0.6);
   }
 
   .limpar-btn {
     background: transparent;
-    color: #ff4d4d;
-    border: 2px solid #ff4d4d;
+    color: #ef4444;
+    border: 2px solid #ef4444;
     box-shadow: none;
+    flex: 1;
+    font-weight: 700;
+    font-size: 16px;
+    padding: 16px 30px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
   }
 
   .limpar-btn:hover {
-    background-color: rgba(255, 77, 77, 0.1);
-    color: #ff4d4d;
+    background-color: rgba(239, 68, 68, 0.08);
+    color: #dc2626;
     box-shadow: none;
+    transform: translateY(-2px);
   }
 
   @media (max-width: 680px) {
@@ -179,384 +349,287 @@
     .actions-container {
       flex-direction: column;
     }
+    header {
+      padding-left: 15px;
+      padding-right: 15px;
+    }
   }
-
-/* Componentes dinâmicos */
-.progress-container {
-  position: sticky;
-  top: 75px;
-  z-index: 50;
-  background: rgba(255,255,255,.9);
-  padding: 10px 20px;
-  border-bottom: 1px solid #e5e7eb;
-  backdrop-filter: blur(10px);
-}
-.progress-bar {
-  height: 8px;
-  border-radius: 20px;
-  background: #e5e7eb;
-  overflow: hidden;
-}
-.progress-fill {
-  height:100%;
-  width:0%;
-  background: linear-gradient(90deg,#7b2cbf,#ff7b00);
-  transition:.4s;
-}
-.section-card {
-  animation: fadeIn .5s ease;
-}
-@keyframes fadeIn {
- from {opacity:0; transform:translateY(15px)}
- to {opacity:1; transform:none}
-}
-.score-preview {
- background:white;
- border-radius:16px;
- padding:20px;
- box-shadow:0 8px 25px rgba(0,0,0,.06);
- margin-bottom:20px;
- display:flex;
- justify-content:space-between;
-}
-.badge {
- padding:8px 16px;
- border-radius:30px;
- background:#f3e8ff;
- color:#7b2cbf;
- font-weight:700;
-}
-
 </style>
 </head>
 <body>
 
-<header>Monitoria de Atendimento <span>Wick</span></header>
+<header>
+  <div style="width: 80px;"></div>
+  <div class="header-brand">
+    <img src="https://i.postimg.cc/WpY8c1jL/wick-roxo-sem-fundo.png" alt="Wick Logo">
+    <span>Monitoria de Atendimento</span>
+  </div>
+  <button class="theme-toggle-btn" id="themeToggleBtn" onclick="toggleTheme()">
+    <span class="theme-circle"></span> <span id="themeText">Escuro</span>
+  </button>
+</header>
 
 <div class="progress-container">
-  <div>Preenchimento da avaliação</div>
+  <div class="progress-label-wrap">
+    <span>Progresso da Avaliação</span>
+    <span id="progressText">0% concluído</span>
+  </div>
   <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
 </div>
 
 <div class="container">
 
-<div class="score-preview">
-  <div>
-    <strong>Monitoria Wick</strong>
-    <br>
-    <small id="statusPreview">Aguardando respostas...</small>
+  <div class="score-preview">
+    <div>
+      <strong>Painel de Desempenho Wick</strong>
+      <br>
+      <small id="statusPreview">Aguardando preenchimento...</small>
+    </div>
+    <div class="badge" id="scorePreview">0%</div>
   </div>
-  <div class="badge" id="scorePreview">0%</div>
-</div>
 
   <form id="monitoriaForm" onsubmit="return false;">
     
-    <!-- ETAPA 0: METADADOS -->
+    <!-- METADADOS -->
     <div class="section-card">
-      <div class="section-title">📊 Informações do Painel</div>
+      <div class="section-title">📊 Informações do Painel & Gestão</div>
       <div class="grid-2">
         <div class="form-group">
           <label for="avaliador">Nome do Avaliador</label>
           <input type="text" id="avaliador" name="avaliador" placeholder="Quem está avaliando?" required>
         </div>
         <div class="form-group">
-          <label for="avaliado">Nome do Avaliado</label>
+          <label for="avaliado">Nome do Avaliado (Colaborador)</label>
           <input type="text" id="avaliado" name="avaliado" placeholder="Quem foi avaliado?" required>
         </div>
       </div>
       <div class="grid-2">
         <div class="form-group">
+          <label for="gestor">Nome do Gestor</label>
+          <input type="text" id="gestor" name="gestor" placeholder="Gestor responsável">
+        </div>
+        <div class="form-group">
           <label for="cliente">Cliente do Atendimento</label>
           <input type="text" id="cliente" name="cliente" placeholder="Nome do cliente" required>
         </div>
+      </div>
+      <div class="grid-2">
         <div class="form-group">
           <label for="protocolo">Protocolo do Atendimento</label>
           <input type="text" id="protocolo" name="protocolo" placeholder="Nº do Protocolo">
         </div>
-      </div>
-      <div class="form-group">
-        <label for="data">Data da Avaliação</label>
-        <input type="date" id="data" name="data" required>
+        <div class="form-group">
+          <label for="data">Data da Avaliação</label>
+          <input type="date" id="data" name="data" required>
+        </div>
       </div>
     </div>
 
-    <!-- ETAPA 1: CONTEXTO GERAL -->
+    <!-- BLOCO 1: TRIAGEM E CONTEXTO INICIAL -->
     <div class="section-card">
-      <div class="section-title">1️⃣ Triagem & Contexto Inicial</div>
+      <div class="section-title">1️⃣ Triagem e Contexto Inicial</div>
       
       <div class="grid-2">
         <div class="form-group">
-          <label for="q4">Operadora</label>
-          <select id="q4" name="q4">
+          <label for="q1">1. Tempo de Atendimento e Jornada (Duração e pausas)</label>
+          <select id="q1" name="q1" onchange="tratarObs(1)">
             <option value="">Selecione</option>
-            <option value="Claro">Claro</option>
-            <option value="Vivo">Vivo</option>
-            <option value="Tim">Tim</option>
-            <option value="-">-</option>
+            <option value="1">Sim (Adequado)</option>
+            <option value="0.5">Mais ou menos</option>
+            <option value="0">Não (Inadequado)</option>
           </select>
+          <div id="obs-container-q1" class="obs-container">
+            <label for="obs_q1">O que poderia melhorar neste critério?</label>
+            <textarea id="obs_q1" placeholder="Descreva os ajustes necessários..."></textarea>
+          </div>
         </div>
+
         <div class="form-group">
-          <label for="q2">Houve pausas excessivas sem justificativa?</label>
-          <select id="q2" name="q2">
+          <label for="q2">2. Identificação e Contexto (Operadora e demanda)</label>
+          <select id="q2" name="q2" onchange="tratarObs(2)">
             <option value="">Selecione</option>
-            <option value="0">Sim</option>
-            <option value="1">Não</option>
+            <option value="1">Sim (Correto)</option>
+            <option value="0.5">Mais ou menos</option>
+            <option value="0">Não (Incompleto)</option>
           </select>
+          <div id="obs-container-q2" class="obs-container">
+            <label for="obs_q2">O que poderia melhorar neste critério?</label>
+            <textarea id="obs_q2" placeholder="Descreva os ajustes necessários..."></textarea>
+          </div>
         </div>
       </div>
 
-      <div class="form-group">
-        <label for="q5">Tipo de solicitação (cancelamento, fatura, portabilidade, etc.)</label>
-        <textarea id="q5" name="q5" placeholder="Descreva qual foi a demanda solicitada..."></textarea>
-      </div>
-
-      <div class="form-group">
-        <label for="q1">Tempo total do atendimento</label>
-        <textarea id="q1" name="q1" placeholder="Indique a duração total observada..."></textarea>
+      <div class="form-group" style="margin-top: 15px;">
+        <label for="obs_triagem">Observações Gerais da Triagem</label>
+        <textarea id="obs_triagem" name="obs_triagem" placeholder="Detalhes adicionais sobre a operadora, tipo de solicitação ou duração..."></textarea>
       </div>
     </div>
 
-    <!-- ETAPA 2: ABORDAGEM E SEGURANÇA -->
+    <!-- BLOCO 2: INÍCIO DO CONTATO & SEGURANÇA -->
     <div class="section-card">
       <div class="section-title">2️⃣ Início do Contato & Segurança</div>
       
       <div class="form-group">
-        <label for="q9">Tempo para responder a primeira mensagem dentro do SLA?</label>
-        <select id="q9" name="q9">
+        <label for="q3">3. SLA de Resposta Inicial (Tempo ágil na primeira mensagem)</label>
+        <select id="q3" name="q3" onchange="tratarObs(3)">
           <option value="">Selecione</option>
           <option value="1">Sim</option>
+          <option value="0.5">Mais ou menos</option>
           <option value="0">Não</option>
         </select>
+        <div id="obs-container-q3" class="obs-container">
+          <label for="obs_q3">O que poderia melhorar neste critério?</label>
+          <textarea id="obs_q3" placeholder="Descreva os ajustes necessários..."></textarea>
+        </div>
       </div>
 
       <div class="form-group">
-        <label for="q6">Identificação do cliente confirmada?</label>
-        <select id="q6" name="q6">
+        <label for="q4">4. Validação Cadastral & LGPD (Nome, CPF, linha e segurança de dados)</label>
+        <select id="q4" name="q4" onchange="tratarObs(4)">
           <option value="">Selecione</option>
           <option value="1">Sim</option>
+          <option value="0.5">Mais ou menos</option>
           <option value="0">Não</option>
         </select>
-      </div>
-
-      <div class="form-group">
-        <label for="q14">Confirmação correta dos dados do cliente (nome, CPF, linha)?</label>
-        <select id="q14" name="q14">
-          <option value="">Selecione</option>
-          <option value="1">Sim</option>
-          <option value="0">Não</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label for="q15">Validação de informações sensíveis de forma segura?</label>
-        <select id="q15" name="q15">
-          <option value="">Selecione</option>
-          <option value="1">Sim</option>
-          <option value="0">Não</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label for="q16">Coleta apenas do necessário para a demanda?</label>
-        <select id="q16" name="q16">
-          <option value="">Selecione</option>
-          <option value="1">Sim</option>
-          <option value="0">Não</option>
-        </select>
+        <div id="obs-container-q4" class="obs-container">
+          <label for="obs_q4">O que poderia melhorar neste critério?</label>
+          <textarea id="obs_q4" placeholder="Descreva os ajustes necessários..."></textarea>
+        </div>
       </div>
     </div>
 
-    <!-- ETAPA 3: COMUNICAÇÃO E EMPATIA -->
+    <!-- BLOCO 3: COMUNICAÇÃO, EMPATIA E SOFT SKILLS -->
     <div class="section-card">
-      <div class="section-title">3️⃣ Qualidade Gráfica & Soft Skills</div>
+      <div class="section-title">3️⃣ Comunicação, Empatia e Soft Skills</div>
 
       <div class="form-group">
-        <label for="q7">Uso do nome do cliente durante a conversa?</label>
-        <select id="q7" name="q7">
+        <label for="q5">5. Clareza e Objetividade (Linguagem acessível e direta)</label>
+        <select id="q5" name="q5" onchange="tratarObs(5)">
           <option value="">Selecione</option>
           <option value="1">Sim</option>
+          <option value="0.5">Mais ou menos</option>
           <option value="0">Não</option>
         </select>
+        <div id="obs-container-q5" class="obs-container">
+          <label for="obs_q5">O que poderia melhorar neste critério?</label>
+          <textarea id="obs_q5" placeholder="Descreva os ajustes necessários..."></textarea>
+        </div>
       </div>
 
       <div class="form-group">
-        <label for="q8">Tom educado e profissional no texto?</label>
-        <select id="q8" name="q8">
+        <label for="q6">6. Normas Gramaticais e Formatação (Ortografia e emojis adequados)</label>
+        <select id="q6" name="q6" onchange="tratarObs(6)">
           <option value="">Selecione</option>
           <option value="1">Sim</option>
+          <option value="0.5">Mais ou menos</option>
           <option value="0">Não</option>
         </select>
+        <div id="obs-container-q6" class="obs-container">
+          <label for="obs_q6">O que poderia melhorar neste critério?</label>
+          <textarea id="obs_q6" placeholder="Descreva os ajustes necessários..."></textarea>
+        </div>
       </div>
 
       <div class="form-group">
-        <label for="q10">Linguagem clara, sem termos técnicos desnecessários?</label>
-        <select id="q10" name="q10">
+        <label for="q7">7. Empatia e Postura Cordial (Uso do nome, tom profissional e firmeza com irritados)</label>
+        <select id="q7" name="q7" onchange="tratarObs(7)">
           <option value="">Selecione</option>
           <option value="1">Sim</option>
+          <option value="0.5">Mais ou menos</option>
           <option value="0">Não</option>
         </select>
-      </div>
-
-      <div class="form-group">
-        <label for="q11">Mensagens objetivas, sem textos longos que confundam?</label>
-        <select id="q11" name="q11">
-          <option value="">Selecione</option>
-          <option value="1">Sim</option>
-          <option value="0">Não</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label for="q12">Escrita correta (gramática e ortografia)?</label>
-        <select id="q12" name="q12">
-          <option value="">Selecione</option>
-          <option value="1">Sim</option>
-          <option value="0">Não</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label for="q13">Uso adequado de emojis e formatação?</label>
-        <select id="q13" name="q13">
-          <option value="">Selecione</option>
-          <option value="1">Sim</option>
-          <option value="0">Não</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label for="q23">Mostrou compreensão pela situação do cliente?</label>
-        <select id="q23" name="q23">
-          <option value="">Selecione</option>
-          <option value="1">Sim</option>
-          <option value="0">Não</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label for="q24">Evitou respostas automáticas que não condizem com o caso?</label>
-        <select id="q24" name="q24">
-          <option value="">Selecione</option>
-          <option value="1">Sim</option>
-          <option value="0">Não</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label for="q25">Manteve calma e cordialidade mesmo em casos de cliente irritado?</label>
-        <select id="q25" name="q25">
-          <option value="">Selecione</option>
-          <option value="1">Sim</option>
-          <option value="0">Não</option>
-        </select>
+        <div id="obs-container-q7" class="obs-container">
+          <label for="obs_q7">O que poderia melhorar neste critério?</label>
+          <textarea id="obs_q7" placeholder="Descreva os ajustes necessários..."></textarea>
+        </div>
       </div>
     </div>
 
-    <!-- ETAPA 4: RESOLUÇÃO TÉCNICA -->
+    <!-- BLOCO 4: RESOLUÇÃO TÉCNICA & PROCESSOS -->
     <div class="section-card">
-      <div class="section-title">4️⃣ Resolução & Processos Internos</div>
+      <div class="section-title">4️⃣ Resolução Técnica & Processos</div>
 
       <div class="form-group">
-        <label for="q18">Entendimento total do problema antes de responder?</label>
-        <select id="q18" name="q18">
+        <label for="q8">8. Orientação Técnica (Compreensão do problema e passo a passo claro)</label>
+        <select id="q8" name="q8" onchange="tratarObs(8)">
           <option value="">Selecione</option>
           <option value="1">Sim</option>
+          <option value="0.5">Mais ou menos</option>
           <option value="0">Não</option>
         </select>
+        <div id="obs-container-q8" class="obs-container">
+          <label for="obs_q8">O que poderia melhorar neste critério?</label>
+          <textarea id="obs_q8" placeholder="Descreva os ajustes necessários..."></textarea>
+        </div>
       </div>
 
       <div class="form-group">
-        <label for="q19">Explicação clara dos procedimentos?</label>
-        <select id="q19" name="q19">
+        <label for="q9">9. Políticas e Scripts (Regras da operadora e scripts obrigatórios)</label>
+        <select id="q9" name="q9" onchange="tratarObs(9)">
           <option value="">Selecione</option>
           <option value="1">Sim</option>
+          <option value="0.5">Mais ou menos</option>
           <option value="0">Não</option>
         </select>
+        <div id="obs-container-q9" class="obs-container">
+          <label for="obs_q9">O que poderia melhorar neste critério?</label>
+          <textarea id="obs_q9" placeholder="Descreva os ajustes necessários..."></textarea>
+        </div>
       </div>
 
-      <div class="form-group">
-        <label for="q20">Passo a passo para o cliente, quando necessário?</label>
-        <select id="q20" name="q20">
-          <option value="">Selecione</option>
-          <option value="1">Sim</option>
-          <option value="0">Não</option>
-        </select>
-      </div>
+      <div class="grid-2">
+        <div class="form-group">
+          <label for="q10">10. Tabulação e Registro correto no sistema</label>
+          <select id="q10" name="q10" onchange="tratarObs(10)">
+            <option value="">Selecione</option>
+            <option value="1">Sim</option>
+            <option value="0.5">Mais ou menos</option>
+            <option value="0">Não</option>
+          </select>
+          <div id="obs-container-q10" class="obs-container">
+            <label for="obs_q10">O que poderia melhorar?</label>
+            <textarea id="obs_q10" placeholder="Descreva os ajustes..."></textarea>
+          </div>
+        </div>
 
-      <div class="form-group">
-        <label for="q21">Cumprimento de políticas internas da operadora?</label>
-        <select id="q21" name="q21">
-          <option value="">Selecione</option>
-          <option value="1">Sim</option>
-          <option value="0">Não</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label for="q22">Uso correto de scripts obrigatórios?</label>
-        <select id="q22" name="q22">
-          <option value="">Selecione</option>
-          <option value="1">Sim</option>
-          <option value="0">Não</option>
-        </select>
-      </div>
-
-      <!-- NOVA PERGUNTA INSERIDA AQUI -->
-      <div class="form-group">
-        <label for="q28">Fez a transferência de forma devida?</label>
-        <select id="q28" name="q28">
-          <option value="">Selecione</option>
-          <option value="1">Sim</option>
-          <option value="0">Não</option>
-          <option value="cliente_nao_transferido">Cliente não foi transferido</option>
-          <option value="nao_houve_necessidade">Não houve necessidade de transferência</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label for="q17">Registro no sistema/Tabulação?</label>
-        <select id="q17" name="q17">
-          <option value="">Selecione</option>
-          <option value="1">Sim</option>
-          <option value="0">Não Houve tabulação até o momento da monitoria</option>
-        </select>
+        <div class="form-group">
+          <label for="q11">11. Gestão de Transferência (Devida ou sem necessidade)</label>
+          <select id="q11" name="q11" onchange="tratarObs(11)">
+            <option value="">Selecione</option>
+            <option value="1">Sim (Devida)</option>
+            <option value="0.5">Mais ou menos</option>
+            <option value="0">Não (Indevida)</option>
+            <option value="na">Sem Necessidade</option>
+          </select>
+          <div id="obs-container-q11" class="obs-container">
+            <label for="obs_q11">O que poderia melhorar?</label>
+            <textarea id="obs_q11" placeholder="Descreva os ajustes..."></textarea>
+          </div>
+        </div>
       </div>
     </div>
 
-    <!-- ETAPA 5: FECHAMENTO -->
+    <!-- BLOCO 5: CONCLUSAÃO & ENCERRAMENTO -->
     <div class="section-card">
       <div class="section-title">5️⃣ Conclusão & Encerramento</div>
 
       <div class="form-group">
-        <label for="q26">Confirmou que o problema foi resolvido?</label>
-        <select id="q26" name="q26">
+        <label for="q12">12. Fechamento e Próximos Passos (Resolução confirmada, protocolos e despedida)</label>
+        <select id="q12" name="q12" onchange="tratarObs(12)">
           <option value="">Selecione</option>
           <option value="1">Sim</option>
+          <option value="0.5">Mais ou menos</option>
           <option value="0">Não</option>
         </select>
-      </div>
-
-      <div class="form-group">
-        <label for="q27">Orientou sobre próximos passos ou protocolos?</label>
-        <select id="q27" name="q27">
-          <option value="">Selecione</option>
-          <option value="1">Sim</option>
-          <option value="0">Não</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label for="q3">Se despediu de forma formal e cordial?</label>
-        <select id="q3" name="q3">
-          <option value="">Selecione</option>
-          <option value="1">Sim</option>
-          <option value="0">Não</option>
-        </select>
+        <div id="obs-container-q12" class="obs-container">
+          <label for="obs_q12">O que poderia melhorar neste critério?</label>
+          <textarea id="obs_q12" placeholder="Descreva os ajustes necessários..."></textarea>
+        </div>
       </div>
     </div>
 
     <div class="actions-container">
-      <button type="button" onclick="gerarPDF()">🚀 Emitir Relatório PDF</button>
+      <button type="button" class="main-btn" onclick="gerarPDF()">Emitir Relatório PDF Profissional</button>
       <button type="button" class="limpar-btn" onclick="limparPerguntas()">Limpar Tudo</button>
     </div>
   </form>
@@ -566,42 +639,62 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
+// Alternância de Tema Claro / Escuro
+function toggleTheme() {
+  const html = document.documentElement;
+  const themeText = document.getElementById("themeText");
+  
+  if (html.getAttribute("data-theme") === "dark") {
+    html.removeAttribute("data-theme");
+    localStorage.setItem("wick_theme", "light");
+    themeText.textContent = "Escuro";
+  } else {
+    html.setAttribute("data-theme", "dark");
+    localStorage.setItem("wick_theme", "dark");
+    themeText.textContent = "Claro";
+  }
+}
+
+// Inicializar tema com base na preferência salva
+(function() {
+  const savedTheme = localStorage.getItem("wick_theme");
+  const themeText = document.getElementById("themeText");
+  
+  if (savedTheme === "dark") {
+    document.documentElement.setAttribute("data-theme", "dark");
+    if (themeText) themeText.textContent = "Claro";
+  }
+})();
+
 const perguntas = [
-  "Tempo total do atendimento",
-  "Houve pausas excessivas sem justificativa?",
-  "Se despediu de forma formal e cordial?",
-  "Operadora",
-  "Tipo de solicitação (cancelamento, fatura, portabilidade, etc.)",
-  "Identificação do cliente confirmada?",
-  "Uso do nome do cliente durante a conversa?",
-  "Tom educado e profissional no texto?",
-  "Tempo para responder a primeira mensagem dentro do SLA?",
-  "Linguagem clara, sem termos técnicos desnecessários?",
-  "Mensagens objetivas, sem textos longos que confundam?",
-  "Escrita correta (gramática e ortografia)?",
-  "Uso adequado de emojis e formatação?",
-  "Confirmação correta dos dados do cliente (nome, CPF, linha)?",
-  "Validação de informações sensíveis de forma segura?",
-  "Coleta apenas do necessário para a demanda?",
-  "Registro no sistema/Tabulação?",
-  "Entendimento total do problema antes de responder?",
-  "Explicação clara dos procedimentos?",
-  "Passo a passo para o cliente, quando necessário?",
-  "Cumprimento de políticas internas da operadora?",
-  "Uso correto de scripts obrigatórios?",
-  "Mostrou compreensão pela situação do cliente?",
-  "Evitou respostas automáticas que não condizem com o caso?",
-  "Manteve calma e cordialidade mesmo em casos de cliente irritado?",
-  "Confirmou que o problema foi resolvido?",
-  "Orientou sobre próximos passos ou protocolos?",
-  "Fez a transferência de forma devida?" /* Pergunta 28 adicionada na lista */
+  "Tempo de Atendimento e Jornada",
+  "Identificação e Contexto",
+  "SLA de Resposta Inicial",
+  "Validação Cadastral & LGPD",
+  "Clareza e Objetividade",
+  "Normas Gramaticais e Formatação",
+  "Empatia e Postura Cordial",
+  "Orientação Técnica",
+  "Políticas e Scripts",
+  "Tabulação e Registro",
+  "Gestão de Transferência",
+  "Fechamento e Próximos Passos"
 ];
 
-const pesos = [
-  1, 1, 3, 0, 1, 3, 2, 3, 3, 3,
-  2, 3, 1, 3, 3, 2, 1, 3, 3, 2,
-  2, 2, 3, 2, 3, 3, 2, 2 /* Peso atribuído para a pergunta 28 */
-];
+const pesos = [2, 1, 3, 4, 3, 2, 4, 4, 3, 2, 2, 3]; // Soma total = 33 pontos
+
+function tratarObs(num) {
+  const select = document.getElementById(`q${num}`);
+  const container = document.getElementById(`obs-container-q${num}`);
+  if (select.value === "0" || select.value === "0.5") {
+    container.classList.add("active");
+  } else {
+    container.classList.remove("active");
+    const textarea = document.getElementById(`obs_q${num}`);
+    if (textarea) textarea.value = "";
+  }
+  atualizarPainel();
+}
 
 function quebraLinha(doc, texto, x, y, lineHeight, maxWidth = 180) {
   const splitText = doc.splitTextToSize(texto, maxWidth);
@@ -611,11 +704,11 @@ function quebraLinha(doc, texto, x, y, lineHeight, maxWidth = 180) {
   return y + (splitText.length * lineHeight);
 }
 
-function checarQuebraPagina(doc, y, lineHeight, margemInferior = 20) {
+function checarQuebraPagina(doc, y, lineHeight, margemInferior = 10) {
   const paginaAltura = doc.internal.pageSize.getHeight();
   if (y + lineHeight > paginaAltura - margemInferior) {
     doc.addPage();
-    return 10;
+    return 12;
   }
   return y;
 }
@@ -627,34 +720,34 @@ async function gerarPDF() {
   const img = document.getElementById('logoWick');
   if (!img.complete) await new Promise(resolve => { img.onload = resolve; img.onerror = resolve; });
 
-  const imgWidth = 50;
-  const imgHeight = 15;
+  const imgWidth = 42;
+  const imgHeight = 12.5;
   const pageWidth = doc.internal.pageSize.getWidth();
-  const imgX = pageWidth - imgWidth - 10;
-  const imgY = 10;
-  doc.addImage(img, 'PNG', imgX, imgY, imgWidth, imgHeight);
+  
+  const imgX = (pageWidth - imgWidth) / 2;
+  let imgY = 10;
+  
+  try {
+    doc.addImage(img, 'PNG', imgX, imgY, imgWidth, imgHeight);
+  } catch(e) {}
 
-  doc.setFillColor("#7b2cbf");
-  doc.roundedRect(10, 10, 190, 20, 5, 5, "F");
-  doc.setTextColor("#ffffff");
-  doc.setFontSize(16);
-  doc.text("Relatório Executivo - Monitoria Wick", 18, 23);
+  let y = imgY + imgHeight + 6;
+  doc.setFontSize(15);
+  doc.setFont("helvetica", "bold");
+  doc.setTextColor("#7b2cbf");
+  doc.text("Monitoria de Atendimento", pageWidth / 2, y, { align: "center" });
 
-  doc.setTextColor("#000000");
+  y += 8;
+  const margin = 12;
+  const lineHeight = 6.2;
 
+  doc.setFillColor("#f8fafc");
+  doc.setDrawColor("#e5e7eb");
+  doc.roundedRect(margin, y, 186, 30, 2, 2, "FD");
 
-  let y = imgY + 5;
-  const margin = 10;
-  const lineHeight = 8;
-
-  doc.setFontSize(16);
-  doc.setTextColor("#6a0dad");
-  doc.text("Monitoria de Atendimento Wick", margin, y);
-  y += lineHeight * 1.5;
-
-  doc.setFontSize(12);
-  doc.setTextColor("#000");
-
+  doc.setFontSize(11);
+  doc.setTextColor("#4b5563");
+  
   const dataRaw = document.getElementById("data").value || "";
   let dataFormatada = "Não informado";
   if (dataRaw) {
@@ -664,131 +757,184 @@ async function gerarPDF() {
 
   const avaliador = document.getElementById("avaliador").value.trim() || "Não informado";
   const avaliado = document.getElementById("avaliado").value.trim() || "Não informado";
+  const gestor = document.getElementById("gestor").value.trim() || "Não informado";
   const cliente = document.getElementById("cliente").value.trim() || "Não informado";
   const protocolo = document.getElementById("protocolo").value.trim() || "Não informado";
 
-  y = checarQuebraPagina(doc, y, lineHeight);
-  doc.text(`Data: ${dataFormatada}`, margin, y);
-  y += lineHeight;
-  y = checarQuebraPagina(doc, y, lineHeight);
-  doc.text(`Avaliador: ${avaliador}`, margin, y);
-  y += lineHeight;
-  y = checarQuebraPagina(doc, y, lineHeight);
-  doc.text(`Avaliado: ${avaliado}`, margin, y);
-  y += lineHeight;
-  y = checarQuebraPagina(doc, y, lineHeight);
-  doc.text(`Cliente: ${cliente}`, margin, y);
-  y += lineHeight;
-  y = checarQuebraPagina(doc, y, lineHeight);
-  doc.text(`Protocolo: ${protocolo}`, margin, y);
-  y += lineHeight * 1.5;
+  doc.text(`Data: ${dataFormatada}`, margin + 6, y + 8);
+  doc.text(`Avaliador: ${avaliador}`, margin + 6, y + 17);
+  doc.text(`Avaliado: ${avaliado}`, margin + 6, y + 26);
+  doc.text(`Gestor: ${gestor}`, margin + 98, y + 8);
+  doc.text(`Cliente: ${cliente}`, margin + 98, y + 17);
+  doc.text(`Protocolo: ${protocolo}`, margin + 98, y + 26);
+
+  y += 36;
 
   let somaPontos = 0;
-  let totalPeso = 0;
+  let totalPesoMaximo = 33;
+  let pesoSubtraido = 0;
+
+  doc.setFontSize(13);
+  doc.setFont("helvetica", "bold");
+  doc.setTextColor("#7b2cbf");
+  doc.text("Detalhamento dos Macrocritérios Avaliados:", margin, y);
+  y += 6;
+
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(11.5);
 
   for (let i = 0; i < perguntas.length; i++) {
     const num = i + 1;
     let resposta = "";
-
     const el = document.getElementById(`q${num}`);
-    if (num === 1 || num === 5) {
-      resposta = el ? el.value.trim() : "";
-      if (!resposta) resposta = "Não respondido";
-    } else if (num === 4) {
-      resposta = el ? el.value : "";
-      if (!resposta) resposta = "Não informado";
-    } else if (num === 28) {
-      // Tratamento personalizado da exibição da resposta da pergunta nova no PDF
-      const val = el ? el.value : "";
-      if (val === "1") resposta = "Sim";
-      else if (val === "0") resposta = "Não";
-      else if (val === "cliente_nao_transferido") resposta = "Cliente não foi transferido";
-      else if (val === "nao_houve_necessidade") resposta = "Não houve necessidade de transferência";
-      else resposta = "Não respondido";
-    } else {
-      resposta = el ? el.value : "";
-      if (!resposta) resposta = "Não respondido";
-      if (resposta === "1") resposta = "Sim";
-      else if (resposta === "0") resposta = "Não";
+
+    resposta = el ? el.value : "";
+    let textoResposta = "Não respondido";
+    let corResposta = "#6b7280";
+
+    if (resposta === "1") {
+      textoResposta = "Sim";
+      corResposta = "#16a34a";
+      somaPontos += pesos[i];
+    } else if (resposta === "0.5") {
+      textoResposta = "Mais ou menos";
+      corResposta = "#ff7b00";
+      somaPontos += (pesos[i] * 0.5);
+    } else if (resposta === "0") {
+      textoResposta = "Não";
+      corResposta = "#dc2626";
+    } else if (resposta === "na") {
+      textoResposta = "Sem Necessidade";
+      corResposta = "#6b7280";
+      pesoSubtraido += pesos[i];
     }
 
-    const textoPergunta = `${num} - ${perguntas[i]}: ${resposta}`;
-    y = checarQuebraPagina(doc, y, lineHeight);
-    y = quebraLinha(doc, textoPergunta, margin, y, lineHeight);
+    const textoPergunta = `${num}. ${perguntas[i]}`;
+    y = checarQuebraPagina(doc, y, lineHeight * 1.5);
+    
+    doc.setTextColor("#1f2937");
+    doc.setFont("helvetica", "bold");
+    y = quebraLinha(doc, textoPergunta, margin, y, lineHeight, 125);
+    
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(corResposta);
+    doc.text(`[ ${textoResposta} ]`, margin + 125, y - lineHeight);
 
-    // Regra de soma de pontos
-    if (![1,4,5].includes(num)) {
-      // Se for a pergunta 28 e a opção for de "não houve necessidade", ela neutraliza o peso para não prejudicar a nota
-      if (num === 28 && ["cliente_nao_transferido", "nao_houve_necessidade"].includes(el?.value)) {
-         // Não soma no total nem nos pontos (Ignora o peso)
-      } else {
-         if (resposta === "Sim") somaPontos += pesos[i];
-         totalPeso += pesos[i];
+    if (resposta === "0" || resposta === "0.5") {
+      const obsTexto = document.getElementById(`obs_q${num}`).value.trim();
+      if (obsTexto) {
+        y = checarQuebraPagina(doc, y, lineHeight);
+        doc.setFontSize(10.5);
+        doc.setTextColor("#6b7280");
+        y = quebraLinha(doc, `↳ Obs: ${obsTexto}`, margin + 6, y, lineHeight, 172);
+        doc.setFontSize(11.5);
       }
     }
 
-    y += lineHeight / 2;
+    y += 2.5;
   }
 
-  y = checarQuebraPagina(doc, y, lineHeight * 2);
-  const percentual = totalPeso > 0 ? (somaPontos / totalPeso) * 100 : 0;
-  doc.setFontSize(14);
-  doc.setTextColor("#6a0dad");
-  doc.text(`Nota final: ${percentual.toFixed(2)}%`, margin, y);
+  y = checarQuebraPagina(doc, y, 22);
+  let totalPontosPossiveisEfetivo = totalPesoMaximo - pesoSubtraido;
+  const percentual = totalPontosPossiveisEfetivo > 0 ? (somaPontos / totalPontosPossiveisEfetivo) * 100 : 0;
 
-  
-  // Classificação visual da avaliação
-  let classificacao = "";
+  doc.setFillColor("#faf5ff");
+  doc.setDrawColor("#7b2cbf");
+  doc.roundedRect(margin, y, 186, 16, 2, 2, "FD");
+
+  let classificacao = "Necessita melhoria";
   if (percentual >= 90) classificacao = "Excelente";
   else if (percentual >= 75) classificacao = "Bom";
   else if (percentual >= 60) classificacao = "Regular";
-  else classificacao = "Necessita melhoria";
 
-  y += 12;
+  doc.setFont("helvetica", "bold");
   doc.setFontSize(12);
   doc.setTextColor("#7b2cbf");
-  doc.text(`Classificação: ${classificacao}`, margin, y);
+  doc.text(`Nota Final: ${percentual.toFixed(2)}%  —  Classificação: ${classificacao}`, margin + 6, y + 11);
+
+  y += 22;
+
+  y = checarQuebraPagina(doc, y, 35);
+  doc.setFontSize(11);
+  doc.setFont("helvetica", "bold");
+  doc.setTextColor("#1f2937");
+  doc.text("Assinaturas e Validação", margin, y);
+  y += 4;
+
+  const larguraLinha = 186;
+  let xLinha = margin;
+
+  doc.setDrawColor("#9ca3af");
+  doc.setLineWidth(0.4);
+  doc.line(xLinha, y + 8, xLinha + larguraLinha, y + 8);
+  doc.setFontSize(9);
+  doc.setFont("helvetica", "normal");
+  doc.setTextColor("#4b5563");
+  doc.text("ASSINATURA DO AVALIADOR", xLinha, y + 13);
+
+  y += 17;
+  doc.line(xLinha, y + 8, xLinha + larguraLinha, y + 8);
+  doc.text("ASSINATURA DO GESTOR", xLinha, y + 13);
+
+  y += 17;
+  doc.line(xLinha, y + 8, xLinha + larguraLinha, y + 8);
+  doc.text("ASSINATURA DO AGENTE / COLABORADOR", xLinha, y + 13);
 
   doc.save("monitoria_atendimento_wick.pdf");
 }
 
 function limparPerguntas() {
-  for (let i = 1; i <= 28; i++) {
+  for (let i = 1; i <= 12; i++) {
     const el = document.getElementById(`q${i}`);
-    if (el) {
-      if (el.tagName === "SELECT") el.value = "";
-      else if (el.tagName === "TEXTAREA") el.value = "";
-    }
+    if (el) el.value = "";
+    const container = document.getElementById(`obs-container-q${i}`);
+    if (container) container.classList.remove("active");
+    const obsTxt = document.getElementById(`obs_q${i}`);
+    if (obsTxt) obsTxt.value = "";
   }
+  const obs = document.getElementById("obs_triagem");
+  if (obs) obs.value = "";
+  const gestor = document.getElementById("gestor");
+  if (gestor) gestor.value = "";
+  atualizarPainel();
 }
-</script>
 
-
-<script>
 const selects = document.querySelectorAll("select");
 
 function atualizarPainel(){
- let total=0;
- let pontos=0;
- selects.forEach(s=>{
-   if(s.value!==""){
-     if(s.value==="1") pontos++;
-     if(["1","0"].includes(s.value)) total++;
-   }
- });
- let nota = total ? Math.round((pontos/total)*100) : 0;
- document.getElementById("scorePreview").innerHTML = nota+"%";
- document.getElementById("statusPreview").innerHTML =
- nota >= 90 ? "Excelente desempenho" :
- nota >= 75 ? "Bom desempenho" :
- nota >= 60 ? "Necessita atenção" :
- "Preencha a avaliação";
+  let pontosObtidos = 0;
+  let totalPesoMaximo = 33;
+  let pesoSubtraido = 0;
+  let preenchidosCount = 0;
 
- let preenchidos = Math.round((total/selects.length)*100);
- document.getElementById("progressFill").style.width = preenchidos+"%";
+  selects.forEach((s, index) => {
+    if (s.value !== "") {
+      preenchidosCount++;
+      let pesoAtual = pesos[index];
+      if (s.value === "1") {
+        pontosObtidos += pesoAtual;
+      } else if (s.value === "0.5") {
+        pontosObtidos += (pesoAtual * 0.5);
+      } else if (s.value === "na") {
+        pesoSubtraido += pesoAtual;
+      }
+    }
+  });
+
+  let totalEfetivo = totalPesoMaximo - pesoSubtraido;
+  let nota = totalEfetivo > 0 ? Math.round((pontosObtidos / totalEfetivo) * 100) : 0;
+  
+  document.getElementById("scorePreview").innerHTML = nota + "%";
+  document.getElementById("statusPreview").innerHTML =
+    nota >= 90 ? "🌟 Excelente desempenho!" :
+    nota >= 75 ? "👍 Bom desempenho" :
+    nota >= 60 ? "⚠️ Necessita atenção" :
+    "Preencha a avaliação para calcular";
+
+  let preenchidos = Math.round((preenchidosCount / selects.length) * 100);
+  document.getElementById("progressFill").style.width = preenchidos + "%";
+  document.getElementById("progressText").innerHTML = preenchidos + "% concluído";
 }
-
-selects.forEach(s=>s.addEventListener("change", atualizarPainel));
 </script>
 
 </body>
