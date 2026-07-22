@@ -180,13 +180,75 @@
       flex-direction: column;
     }
   }
+
+/* Componentes dinâmicos */
+.progress-container {
+  position: sticky;
+  top: 75px;
+  z-index: 50;
+  background: rgba(255,255,255,.9);
+  padding: 10px 20px;
+  border-bottom: 1px solid #e5e7eb;
+  backdrop-filter: blur(10px);
+}
+.progress-bar {
+  height: 8px;
+  border-radius: 20px;
+  background: #e5e7eb;
+  overflow: hidden;
+}
+.progress-fill {
+  height:100%;
+  width:0%;
+  background: linear-gradient(90deg,#7b2cbf,#ff7b00);
+  transition:.4s;
+}
+.section-card {
+  animation: fadeIn .5s ease;
+}
+@keyframes fadeIn {
+ from {opacity:0; transform:translateY(15px)}
+ to {opacity:1; transform:none}
+}
+.score-preview {
+ background:white;
+ border-radius:16px;
+ padding:20px;
+ box-shadow:0 8px 25px rgba(0,0,0,.06);
+ margin-bottom:20px;
+ display:flex;
+ justify-content:space-between;
+}
+.badge {
+ padding:8px 16px;
+ border-radius:30px;
+ background:#f3e8ff;
+ color:#7b2cbf;
+ font-weight:700;
+}
+
 </style>
 </head>
 <body>
 
 <header>Monitoria de Atendimento <span>Wick</span></header>
 
+<div class="progress-container">
+  <div>Preenchimento da avaliação</div>
+  <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+</div>
+
 <div class="container">
+
+<div class="score-preview">
+  <div>
+    <strong>Monitoria Wick</strong>
+    <br>
+    <small id="statusPreview">Aguardando respostas...</small>
+  </div>
+  <div class="badge" id="scorePreview">0%</div>
+</div>
+
   <form id="monitoriaForm" onsubmit="return false;">
     
     <!-- ETAPA 0: METADADOS -->
@@ -572,6 +634,15 @@ async function gerarPDF() {
   const imgY = 10;
   doc.addImage(img, 'PNG', imgX, imgY, imgWidth, imgHeight);
 
+  doc.setFillColor("#7b2cbf");
+  doc.roundedRect(10, 10, 190, 20, 5, 5, "F");
+  doc.setTextColor("#ffffff");
+  doc.setFontSize(16);
+  doc.text("Relatório Executivo - Monitoria Wick", 18, 23);
+
+  doc.setTextColor("#000000");
+
+
   let y = imgY + 5;
   const margin = 10;
   const lineHeight = 8;
@@ -690,6 +761,34 @@ function limparPerguntas() {
     }
   }
 }
+</script>
+
+
+<script>
+const selects = document.querySelectorAll("select");
+
+function atualizarPainel(){
+ let total=0;
+ let pontos=0;
+ selects.forEach(s=>{
+   if(s.value!==""){
+     if(s.value==="1") pontos++;
+     if(["1","0"].includes(s.value)) total++;
+   }
+ });
+ let nota = total ? Math.round((pontos/total)*100) : 0;
+ document.getElementById("scorePreview").innerHTML = nota+"%";
+ document.getElementById("statusPreview").innerHTML =
+ nota >= 90 ? "Excelente desempenho" :
+ nota >= 75 ? "Bom desempenho" :
+ nota >= 60 ? "Necessita atenção" :
+ "Preencha a avaliação";
+
+ let preenchidos = Math.round((total/selects.length)*100);
+ document.getElementById("progressFill").style.width = preenchidos+"%";
+}
+
+selects.forEach(s=>s.addEventListener("change", atualizarPainel));
 </script>
 
 </body>
