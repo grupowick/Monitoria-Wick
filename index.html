@@ -245,6 +245,8 @@
     border-radius: 0 8px 8px 0;
     display: none;
     animation: fadeIn 0.3s ease;
+    text-align: left !important;
+    text-justify: none;
   }
 
   .obs-container.active {
@@ -257,6 +259,7 @@
     display: block;
     margin-bottom: 8px;
     font-size: 14px;
+    text-align: left !important;
   }
 
   input[type=text], input[type=date], select, textarea {
@@ -270,6 +273,9 @@
     transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     color: var(--text-main);
     font-family: inherit;
+    text-align: left !important;
+    text-justify: none;
+    letter-spacing: normal;
   }
 
   input[type=text]:focus, input[type=date]:focus, select:focus, textarea:focus {
@@ -290,6 +296,9 @@
   textarea {
     resize: vertical;
     min-height: 80px;
+    text-align: left !important;
+    text-justify: none;
+    letter-spacing: normal;
   }
 
   .actions-container {
@@ -700,7 +709,7 @@ function tratarObs(num) {
 function quebraLinha(doc, texto, x, y, lineHeight, maxWidth = 180) {
   const splitText = doc.splitTextToSize(texto, maxWidth);
   splitText.forEach((line, i) => {
-    doc.text(line, x, y + (i * lineHeight));
+    doc.text(line, x, y + (i * lineHeight), { align: "left" });
   });
   return y + (splitText.length * lineHeight);
 }
@@ -762,12 +771,12 @@ async function gerarPDF() {
   const cliente = document.getElementById("cliente").value.trim() || "Não informado";
   const protocolo = document.getElementById("protocolo").value.trim() || "Não informado";
 
-  doc.text(`Data: ${dataFormatada}`, margin + 6, y + 8);
-  doc.text(`Avaliador: ${avaliador}`, margin + 6, y + 17);
-  doc.text(`Avaliado: ${avaliado}`, margin + 6, y + 26);
-  doc.text(`Gestor: ${gestor}`, margin + 98, y + 8);
-  doc.text(`Cliente: ${cliente}`, margin + 98, y + 17);
-  doc.text(`Protocolo: ${protocolo}`, margin + 98, y + 26);
+  doc.text(`Data: ${dataFormatada}`, margin + 6, y + 8, { align: "left" });
+  doc.text(`Avaliador: ${avaliador}`, margin + 6, y + 17, { align: "left" });
+  doc.text(`Avaliado: ${avaliado}`, margin + 6, y + 26, { align: "left" });
+  doc.text(`Gestor: ${gestor}`, margin + 98, y + 8, { align: "left" });
+  doc.text(`Cliente: ${cliente}`, margin + 98, y + 17, { align: "left" });
+  doc.text(`Protocolo: ${protocolo}`, margin + 98, y + 26, { align: "left" });
 
   y += 36;
 
@@ -778,7 +787,7 @@ async function gerarPDF() {
     doc.setFontSize(12);
     doc.setFont("helvetica", "bold");
     doc.setTextColor("#ff7b00");
-    doc.text("Observações Gerais da Triagem:", margin, y);
+    doc.text("Observações Gerais da Triagem:", margin, y, { align: "left" });
     y += 6;
 
     doc.setFont("helvetica", "normal");
@@ -795,7 +804,7 @@ async function gerarPDF() {
   doc.setFontSize(13);
   doc.setFont("helvetica", "bold");
   doc.setTextColor("#7b2cbf");
-  doc.text("Detalhamento dos Macrocritérios Avaliados:", margin, y);
+  doc.text("Detalhamento dos Macrocritérios Avaliados:", margin, y, { align: "left" });
   y += 6;
 
   doc.setFont("helvetica", "normal");
@@ -836,13 +845,12 @@ async function gerarPDF() {
     
     doc.setFont("helvetica", "normal");
     doc.setTextColor(corResposta);
-    doc.text(`[ ${textoResposta} ]`, margin + 125, y - lineHeight);
+    doc.text(`[ ${textoResposta} ]`, margin + 125, y - lineHeight, { align: "left" });
 
     if (resposta === "0" || resposta === "0.5") {
       const obsTexto = document.getElementById(`obs_q${num}`).value.trim();
       if (obsTexto) {
         y = checarQuebraPagina(doc, y, lineHeight);
-        // Ajustado para o mesmo tamanho das perguntas (11.5)
         doc.setFontSize(11.5);
         doc.setFont("helvetica", "normal");
         doc.setTextColor("#4b5563");
@@ -869,7 +877,7 @@ async function gerarPDF() {
   doc.setFont("helvetica", "bold");
   doc.setFontSize(12);
   doc.setTextColor("#7b2cbf");
-  doc.text(`Nota Final: ${percentual.toFixed(2)}%  —  Classificação: ${classificacao}`, margin + 6, y + 11);
+  doc.text(`Nota Final: ${percentual.toFixed(2)}%  —  Classificação: ${classificacao}`, margin + 6, y + 11, { align: "left" });
 
   y += 22;
 
@@ -877,7 +885,7 @@ async function gerarPDF() {
   doc.setFontSize(11);
   doc.setFont("helvetica", "bold");
   doc.setTextColor("#1f2937");
-  doc.text("Assinaturas e Validação", margin, y);
+  doc.text("Assinaturas e Validação", margin, y, { align: "left" });
   y += 4;
 
   const larguraLinha = 186;
@@ -889,15 +897,15 @@ async function gerarPDF() {
   doc.setFontSize(9);
   doc.setFont("helvetica", "normal");
   doc.setTextColor("#4b5563");
-  doc.text("ASSINATURA DO AVALIADOR", xLinha, y + 13);
+  doc.text("ASSINATURA DO AVALIADOR", xLinha, y + 13, { align: "left" });
 
   y += 17;
   doc.line(xLinha, y + 8, xLinha + larguraLinha, y + 8);
-  doc.text("ASSINATURA DO GESTOR", xLinha, y + 13);
+  doc.text("ASSINATURA DO GESTOR", xLinha, y + 13, { align: "left" });
 
   y += 17;
   doc.line(xLinha, y + 8, xLinha + larguraLinha, y + 8);
-  doc.text("ASSINATURA DO AGENTE / COLABORADOR", xLinha, y + 13);
+  doc.text("ASSINATURA DO AGENTE / COLABORADOR", xLinha, y + 13, { align: "left" });
 
   doc.save("monitoria_atendimento_wick.pdf");
 }
